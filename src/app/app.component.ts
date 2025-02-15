@@ -17,4 +17,7 @@ export class AppComponent {
   };
   //properties
   isDisable=false;
+
+  //Attributes
+  contenImage='Tan Nguyen Chao';
 }
