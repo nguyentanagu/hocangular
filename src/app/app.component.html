@@ -1,9 +1,8 @@
 <main class="main">
   <header-layout />
-  <div>{{ title.name }}</div>
-  <div>{{ title.old }}</div>
+ <h1> Click  is an Event</h1>
+ <button (click)="handleClickme()">{{ nameBtn}}</button>
 
-  <button [disabled]="isDisable">Hello</button>
-  <img src="assets/images/2222.png" alt="logo {{contenImage}}">
+<div>Message: {{clickMessega}}</div>
 </main>
 <router-outlet />

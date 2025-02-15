@@ -10,14 +10,15 @@ import { HeaderLayoutComponent } from "./shared/header-layout/header-layout.comp
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  //text
-  title = {
-    name:'NguyenTan',
-    old:'22',
-  };
-  //properties
-  isDisable=false;
+  nameBtn='Click me!';
 
-  //Attributes
-  contenImage='Tan Nguyen Chao';
+  clickMessega='';
+
+  handleClickme():void{
+    this.clickMessega='Click me Hello Word';
+  }
+
+  updateField():void{
+    console.log('Hello world');
+  }
 }
