@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "analytics": "4095f463-9a5c-4d7b-870e-3f60fdf12840"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -23,12 +24,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+            "assets": ["src/assets" ],
             "styles": [
               "src/styles.css"
             ],
