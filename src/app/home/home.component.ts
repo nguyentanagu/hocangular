@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HeaderLayoutComponent } from "../shared/header-layout/header-layout.component";
 import { FormsModule} from '@angular/forms';
@@ -14,7 +14,7 @@ import { ProductItemComponent } from '../shared/product-item/productItem.compone
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   nameBtn ='Click me!';
 
   clickMessage ='';
@@ -30,15 +30,26 @@ export class HomeComponent {
     {id: 4, name: 'Terre Hermes', price: 700000, image: 'assets/images/terre_d_hermes.jpg'},
   ];
 
+  constructor() {
+    console.log('Initalize Component');
+    
+  }
+
+  ngOnInit():void{
+    console.log('Initalized Component');
+  }
+
+  // ngDoCheck(): void {
+  //   console.log('Check Component');
+  // }
+
   updateField(): void{
     console.log('Hello Tan');
   }
 
   handleDelete =  (id:number)  =>{
-    const productIndex = this.products.findIndex(item =>item.id ==id);
-    if ( productIndex !== -1){
-      this.products.splice(productIndex,1);
-    }
+   
+    this.products =this.products.filter((item) =>item.id !==id)
   }
 
   handleClickMe(): void{
