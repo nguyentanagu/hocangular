@@ -18,8 +18,16 @@ import { ProductItems } from "../types/productItem";
 
     @Output() dataEvent = new EventEmitter<number>();
 
+    get totalPrice(): string{
+      const sum =this.products.reduce((total, item) => {
+        return total+item.price;
+      },0);
+
+      return `Total Price ${ sum }`;
+    }
+
     handleDelete =  (id: number) =>{
       
       this.dataEvent.emit(id);
-    }
+    };
   }
