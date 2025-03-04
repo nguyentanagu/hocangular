@@ -2,8 +2,13 @@
 <div class="wrapper-cart">
         <h1>Shoping Cart</h1>
 
-        <div *ngIf="isVisible">Hello Tan</div>
+        
 
-        <app-product-item [products]="products" (dataEvent)="handleDelete($event)"></app-product-item>
+        <div *ngIf="isVisible">
+            <app-product-item [products]="products" (dataEvent)="handleDelete($event)"></app-product-item>
+        </div>
+        <button (click)="handleChangeVisible()"> Oke</button>
+
+        
     </div>
 
