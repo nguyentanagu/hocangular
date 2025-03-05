@@ -8,6 +8,8 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ProductItems } from '../shared/types/productItem';
 import { ProductItemComponent } from '../shared/product-item/productItem.component';
 import { HttpClient } from '@angular/common/http';
+import { BlogService } from '../../services/BlogService';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -24,6 +26,9 @@ export class HomeComponent implements OnInit {
 
   isVisible=true;
 
+
+  getBlogApi: Subscription;
+
   products: ProductItems[] = [
     {id: 1, name: 'Blue De Chanel', price: 400000, image: 'assets/images/bleu_de_chanel.jpg'},
     {id: 2, name: 'Dior Sauvage', price: 500000, image: 'assets/images/dior_sauvage.jpg'},
@@ -31,15 +36,15 @@ export class HomeComponent implements OnInit {
     {id: 4, name: 'Terre Hermes', price: 700000, image: 'assets/images/terre_d_hermes.jpg'},
   ];
 
-  constructor(private http: HttpClient) {
+  constructor(private blogService: BlogService) {
     console.log('Initalize Component');
+    this.getBlogApi= new Subscription();
     
   }
 
   ngOnInit():void{
     console.log('Initalized Component');
-    this.http.get<any>('https://ninedev-api.vercel.app/blogs')
-      .subscribe(({data,message})=> {
+    this.getBlogApi= this.blogService.getBlogs().subscribe(({data,message})=> {
        this.products =data.map((item: any) =>{
         return{
           ...item,
