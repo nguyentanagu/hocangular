@@ -7,6 +7,7 @@ import { UpperCasePipe } from '../shared/pipes/UpperCasePipe.pipe';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ProductItems } from '../shared/types/productItem';
 import { ProductItemComponent } from '../shared/product-item/productItem.component';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -30,18 +31,26 @@ export class HomeComponent implements OnInit {
     {id: 4, name: 'Terre Hermes', price: 700000, image: 'assets/images/terre_d_hermes.jpg'},
   ];
 
-  constructor() {
+  constructor(private http: HttpClient) {
     console.log('Initalize Component');
     
   }
 
   ngOnInit():void{
     console.log('Initalized Component');
-  }
+    this.http.get<any>('https://ninedev-api.vercel.app/blogs')
+      .subscribe(({data,message})=> {
+       this.products =data.map((item: any) =>{
+        return{
+          ...item,
+          name: item.title,
+          price: Number(item.body),
+          image: 'assets/images/terre_d_hermes.jpg',
+        };  
+       });
 
-  // ngDoCheck(): void {
-  //   console.log('Check Component');
-  // }
+      });
+  }
 
   updateField(): void{
     console.log('Hello Tan');
