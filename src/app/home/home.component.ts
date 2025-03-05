@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { HeaderLayoutComponent } from "../shared/header-layout/header-layout.component";
 import { FormsModule} from '@angular/forms';
@@ -9,7 +9,7 @@ import { ProductItems } from '../shared/types/productItem';
 import { ProductItemComponent } from '../shared/product-item/productItem.component';
 import { HttpClient } from '@angular/common/http';
 import { BlogService } from '../../services/BlogService';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit ,OnDestroy {
   nameBtn ='Click me!';
 
   clickMessage ='';
@@ -44,17 +44,29 @@ export class HomeComponent implements OnInit {
 
   ngOnInit():void{
     console.log('Initalized Component');
-    this.getBlogApi= this.blogService.getBlogs().subscribe(({data,message})=> {
-       this.products =data.map((item: any) =>{
-        return{
-          ...item,
-          name: item.title,
-          price: Number(item.body),
-          image: 'assets/images/terre_d_hermes.jpg',
-        };  
-       });
+    this.getBlogApi= this.blogService.getBlogs().pipe(
+      map(({ data }) =>
+        data.map((item: any) =>{
+          return{
+            ...item,
+            name: item.title,
+            price: Number(item.body),
+            image: 'assets/images/terre_d_hermes.jpg',
+          };  
+         }).filter(product =>product.price > 400000)
+      ),
+    ).subscribe((res)=> {
+       this.products = res;
 
       });
+  }
+
+  
+  ngOnDestroy(): void {
+    if(this.getBlogApi){
+      this.getBlogApi.unsubscribe();
+      console.log('getBlogApi Unsubscribe');
+    }
   }
 
   updateField(): void{
