@@ -1,30 +1,28 @@
-.wrapper-cart{
-    background-image: linear-gradient(to right, #d434b0, #8029FC);
+.wrapper-cart {
+    background-image: linear-gradient(to right, #d434b0, #8029fc);
     height: calc(100vh - 70px);
-}
-
-.form-control{
+  }
+  
+  .form-control {
     display: flex;
     flex-direction: column;
-    row-gap: .5rem;
+    row-gap: 0.5rem;
     margin-bottom: 1rem;
-
-}
-
-.form-control label{
-    
+  }
+  
+  .form-control label {
     font-weight: 600;
-}
-
-.form-control input{
-    width:  100%;
+  }
+  
+  .form-control input {
+    width: -webkit-fill-available;
     border: none;
     outline: none;
-    padding: .8rem;
+    padding: 0.8rem;
     border-radius: 4px;
-    background-color: #e2e2e2;
+    background: #ededed;
     font-family: "Montserrat", serif;
     font-optical-sizing: auto;
     font-style: normal;
-    
-}
+  }
+  

@@ -13,21 +13,22 @@ import { map, Subscription } from 'rxjs';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, ProductItemComponent, NgIf ],
+  imports: [RouterOutlet, ProductItemComponent, NgIf],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit ,OnDestroy {
-  nameBtn ='Click me!';
+  nameBtn = 'Click Me!';
 
-  clickMessage ='';
+  clickMessage = '';
 
-  bindingMessage ='';
+  bindingMessage = '';
 
-  isVisible=true;
-
+  isVisible = true;
 
   getBlogApi: Subscription;
+
+  
 
   products: ProductItems[] = [
     {id: 1, name: 'Blue De Chanel', price: 400000, image: 'assets/images/bleu_de_chanel.jpg'},
@@ -38,35 +39,40 @@ export class HomeComponent implements OnInit ,OnDestroy {
 
   constructor(private blogService: BlogService) {
     console.log('Initalize Component');
-    this.getBlogApi= new Subscription();
-    
+    this.getBlogApi = new Subscription();
   }
 
-  ngOnInit():void{
-    console.log('Initalized Component');
-    this.getBlogApi= this.blogService.getBlogs().pipe(
-      map(({ data }) =>
-        data.map((item: any) =>{
-          return{
-            ...item,
-            name: item.title,
-            price: Number(item.body),
-            image: 'assets/images/terre_d_hermes.jpg',
-          };  
-         }).filter(product =>product.price > 400000)
-      ),
-    ).subscribe((res)=> {
-       this.products = res;
-
+  ngOnInit(): void {
+    this.getBlogApi = this.blogService
+      .getBlogs()
+      .pipe(
+        map(({ data }) =>
+          data
+            .map((item: any) => {
+              return {
+                ...item,
+                name: item.title,
+                price: Number(item.body),
+                image: 'assets/images/bleu_de_chanel.jpg',
+              };
+            })
+            
+        )
+      )
+      .subscribe((res) => {
+        this.products = res;
       });
   }
 
   
   ngOnDestroy(): void {
-    if(this.getBlogApi){
+    if (this.getBlogApi) {
       this.getBlogApi.unsubscribe();
-      console.log('getBlogApi Unsubscribe');
+      console.log('getBlogApi unsubscribed');
     }
+  }
+  handleClickMe(): void {
+    this.clickMessage = 'Click Me Hello World';
   }
 
   updateField(): void{
@@ -82,7 +88,5 @@ export class HomeComponent implements OnInit ,OnDestroy {
     this.isVisible = false;
   }
 
-  handleClickMe(): void{
-    this.clickMessage = 'Click me Hello Tan';
-  }
+  
 }
