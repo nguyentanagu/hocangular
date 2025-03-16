@@ -16,12 +16,3 @@
     
 }
 
-.group-navigation .btn-navigation {
-    background-image: linear-gradient(to right, #d434b0, #8029FC);
-    padding: .6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 6px;
-    cursor: pointer;
-}

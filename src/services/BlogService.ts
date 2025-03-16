@@ -11,4 +11,8 @@ export class BlogService {
     getBlogs(): Observable<ResponseData<ProductItems[]>>{
         return this.http.get<any>('https://ninedev-api.vercel.app/blogs');
     }
+
+    detailBlog(id: number): Observable<ResponseData<ProductItems>>{
+        return this.http.get<any>(`https://ninedev-api.vercel.app/blogs/${id}`);
+    }
 }
