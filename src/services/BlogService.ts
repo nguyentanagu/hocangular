@@ -18,5 +18,9 @@ export class BlogService {
 
     postBlog(blogItem: BlogItem): Observable<ResponseData<ProductItems>>{
         return this.http.post<any>(`https://ninedev-api.vercel.app/blogs`, blogItem);
-}
+    }
+
+    deleteBlog(id: number): Observable<ResponseData<ProductItems>> {
+        return this.http.delete<any>(`https://ninedev-api.vercel.app/blogs/${id}`);
+      }
 }

@@ -79,11 +79,9 @@ export class HomeComponent implements OnInit ,OnDestroy {
     console.log('Hello Tan');
   }
 
-  handleDelete =  (id:number)  =>{
-   
-    this.products =this.products.filter((item) =>item.id !==id)
-    this.blogService.deleteBlog(id).subscribe(({data}: any) =>{
-      if (data == 1){
+  handleDelete = (id: number) => {
+    this.blogService.deleteBlog(id).subscribe(({ data}: any) => {
+      if (data == 1) {
         this.products = this.products.filter((item) => item.id !== id);
       }
     });
