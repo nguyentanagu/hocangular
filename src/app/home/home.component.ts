@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit ,OnDestroy {
                 image: 'assets/images/bleu_de_chanel.jpg',
               };
             })
-            
+            .filter((product) => product.price > 100000)
         )
       )
       .subscribe((res) => {
@@ -82,11 +82,16 @@ export class HomeComponent implements OnInit ,OnDestroy {
   handleDelete =  (id:number)  =>{
    
     this.products =this.products.filter((item) =>item.id !==id)
-  }
+    this.blogService.deleteBlog(id).subscribe(({data}: any) =>{
+      if (data == 1){
+        this.products = this.products.filter((item) => item.id !== id);
+      }
+    });
+  };
 
   handleChangeVisible =() =>{
     this.isVisible = false;
-  }
+  };
 
   
 }
