@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { BehaviorSubject, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,13 +12,23 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   loginForm: FormGroup;
   registerForm: FormGroup;
   isLoginMode = true;
   isLoggedIn = false;
-  users: any[] = []; 
-  constructor(private fb: FormBuilder, private router: Router) {
+  users: any[] = [];
+
+  // RxJS Subjects
+  private submitTrigger$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
+  private modeSubject$ = new BehaviorSubject<boolean>(true); // Quản lý chế độ login/register
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
     // Tải danh sách người dùng từ localStorage
     const storedUsers = localStorage.getItem('users');
     this.users = storedUsers ? JSON.parse(storedUsers) : [];
@@ -34,21 +46,35 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     });
+
+    // Xử lý submit với RxJS
+    this.submitTrigger$
+      .pipe(
+        switchMap(() => this.modeSubject$.pipe(
+          tap(mode => {
+            if (mode) {
+              this.handleLogin();
+            } else {
+              this.handleRegister();
+            }
+          })
+        )),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 
   toggleMode() {
     this.isLoginMode = !this.isLoginMode;
+    this.modeSubject$.next(this.isLoginMode); // Cập nhật trạng thái chế độ
   }
+
   onSubmit() {
-    if (this.isLoginMode) {
-      this.handleLogin();
-    } else {
-      this.handleRegister();
-    }
+    this.submitTrigger$.next(); // Kích hoạt submit thông qua Subject
   }
 
   // Xử lý đăng ký
-  handleRegister() {
+  private handleRegister() {
     if (this.registerForm.invalid) return;
 
     const { username, email, password, confirmPassword } = this.registerForm.value;
@@ -58,39 +84,36 @@ export class LoginComponent {
       return;
     }
 
-    // Kiểm tra email đã tồn tại chưa
     if (this.users.some(user => user.email === email)) {
       alert('Email này đã được sử dụng!');
       return;
     }
 
-    // Lưu tài khoản vào danh sách người dùng
     this.users.push({ username, email, password });
     localStorage.setItem('users', JSON.stringify(this.users));
 
     alert('Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
-
-    // Reset form và chuyển sang đăng nhập
     this.registerForm.reset();
-    this.isLoginMode = true;
+    this.toggleMode(); // Chuyển sang chế độ đăng nhập
   }
 
   // Xử lý đăng nhập
-  handleLogin() {
+  private handleLogin() {
     if (this.loginForm.invalid) return;
 
     const { email, password } = this.loginForm.value;
     const user = this.users.find(user => user.email === email && user.password === password);
 
     if (user) {
-      alert(`Đăng nhập thành công! Chào mừng ${user.username}`);
-      localStorage.setItem('loggedInUser', JSON.stringify(user));
-
-      //Chuyển hướng về trang Home sau khi đăng nhập thành công
+      this.authService.login(user); // Lưu trạng thái đăng nhập
       this.router.navigate(['/home']);
     } else {
       alert('Email hoặc mật khẩu không đúng!');
     }
   }
-  
+
+  ngOnDestroy() {
+    this.destroy$.next(); // Hủy tất cả subscription khi component bị hủy
+    this.destroy$.complete();
+  }
 }
