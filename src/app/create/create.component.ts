@@ -31,7 +31,7 @@ export class CreateComponent {
   constructor(private blogService: BlogService, private router: Router) {}
 
   handleAddCart() {
-    if (this.name?.hasError('required') || this.price?.hasError('required'))
+    if (this.name?.hasError('required') || this.price?.hasError('required')) // lay json data từ form,submit data
       return;
     const blogItem: BlogItem = {
       id: Math.random(),

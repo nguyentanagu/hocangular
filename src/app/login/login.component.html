@@ -1,0 +1,55 @@
+<div class="login-container">
+  <h2>{{ isLoginMode ? 'Đăng Nhập' : 'Đăng Ký' }}</h2>
+
+  <!-- Form Đăng Nhập -->
+  <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Email:</label>
+      <input type="email" formControlName="email" />
+    </div>
+
+    <div>
+      <label>Mật khẩu:</label>
+      <input type="password" formControlName="password" />
+    </div>
+
+    <!-- Nút đăng nhập -->
+    <button type="submit" [disabled]="loginForm.invalid">Đăng nhập</button>
+
+    <!-- Nút chuyển hướng sau khi đăng nhập thành công -->
+    <a *ngIf="isLoggedIn" routerLink="/home">
+      <button type="button">Chuyển đến Trang Chủ</button>
+    </a>
+  </form>
+
+  <!-- Form Đăng Ký -->
+  <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Tên người dùng:</label>
+      <input type="text" formControlName="username" />
+    </div>
+
+    <div>
+      <label>Email:</label>
+      <input type="email" formControlName="email" />
+    </div>
+
+    <div>
+      <label>Mật khẩu:</label>
+      <input type="password" formControlName="password" />
+    </div>
+
+    <div>
+      <label>Xác nhận mật khẩu:</label>
+      <input type="password" formControlName="confirmPassword" />
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">Đăng ký</button>
+  </form>
+
+  <p>
+    <a (click)="toggleMode()">
+      {{ isLoginMode ? 'Chưa có tài khoản? Đăng ký' : 'Đã có tài khoản? Đăng nhập' }}
+    </a>
+  </p>
+</div>
